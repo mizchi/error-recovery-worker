@@ -17,10 +17,15 @@ $ ./build.sh
 
 # run with remote r2
 $ pnpm wrangler dev --no-bundle --remote dist/worker.js
+# open http://localhost:8787/error
 
 # deploy
 $ pnpm wrangler deploy --no-bundle --no-minify dist/worker.js
 ```
+
+`/error` shows original error position.
+
+![Alt text](image.png)
 
 ## How it works
 
@@ -37,6 +42,8 @@ gsed -i "s/exports.quickSort = function/exports.quickSort = ()=>{};function nop/
 
 ## Build only with --dry-run
 pnpm wrangler deploy --dry-run --minify --outdir dist src/worker.ts
+
+# open witch
 
 ## upload dist/worker.js.map
 wrangler r2 object put scm-bucket/worker.js.map --file=dist/worker.js.map
