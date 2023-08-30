@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator kysely {
+	provider = "prisma-kysely"
+	output = "../src/db"
+	fileName = "types.ts"
+	enumFileName = "enums.ts"
+}
+
+model ErrorRecord {
+	id 			  String @id @default(uuid())
+	name      String
+	message 	String
+	stack 		String
+	originalStack String
+	url       String
+	at 			  Int
+	ua        String?
+}

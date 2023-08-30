@@ -10,7 +10,31 @@ https://error-recovery-server.mizchi.workers.dev/error
 $ pnpm install
 
 # setup sourcemap bucket once.
-$ wrangler r2 bucket create scm-bucket
+$ pnpm wrangler r2 bucket create scm-bucket
+$ pnpm wrangler d1 create errors --experimental-backend
+$ pnpm wrangler queues create error-queues
+
+## Your wrangler.toml
+# [[r2_buckets]]
+# binding = "SCM_BUCKET"
+# bucket_name = "scm-bucket"
+# preview_bucket_name = "scm-bucket"
+
+# [[queues.producers]]
+#   queue = "error-queues"
+#   binding = "ERROR_QUEUES"
+
+# [[queues.consumers]]
+#   queue = "error-queues"
+
+# [[d1_databases]]
+# binding = "DB" # i.e. available in your
+# database_name = "errors"
+# database_id = "<your-db-id>"
+# migrations_dir = ".wrangler/migrations"
+
+$ pnpm prisma generate
+$ pnpm prisma migrade dev --create-only
 
 # build and upload sourcemap
 $ ./build.sh
@@ -32,6 +56,7 @@ $ pnpm wrangler deploy --no-bundle --no-minify dist/worker.js
 - Patch to run
 - Upload sourcemap to R2
 - Download sourcemap from R2 and get original position on error.
+- Persist: Error => Queue => D1
 
 At first, I will explain internal build.sh
 

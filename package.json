@@ -3,19 +3,27 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "",
-    "deploy": "wrangler deploy",
-    "start": "wrangler dev"
+		"migrate:local": "bash ./migrate.sh && wrangler d1 migrations apply errors --local",
+		"migrate:prod": "bash ./migrate.sh && wrangler d1 migrations apply errors",
+    "build": "bash ./build.sh",
+    "dev": "pnpm build && NO_D1_WARNING=true wrangler dev --no-bundle dist/worker.js",
+    "release": "pnpm build && NO_D1_WARNING=true wrangler deploy --no-bundle --no-minify dist/worker.js"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.0.0",
     "@cloudflare/workers-types": "^4.20230419.0",
     "error-stack-parser": "^2.1.4",
+    "kysely": "^0.26.3",
+    "kysely-d1": "^0.3.0",
+    "prisma": "^5.2.0",
+    "prisma-kysely": "^1.7.0",
     "source-map-js": "^1.0.2",
     "typescript": "^5.2.2",
+    "ulid": "^2.3.0",
     "wrangler": "^3.6.0"
   },
   "dependencies": {
+    "@prisma/client": "5.2.0",
     "esbuild": "^0.19.2"
   }
 }
