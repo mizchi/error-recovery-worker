@@ -1,6 +1,6 @@
-# sourcemap-recovery-worker
+# error-recovery-worker
 
-Demo of original error position recovery from runtime error with sourcemap.
+Demo of original error position recovery from runtime error.
 
 https://error-recovery-server.mizchi.workers.dev/error
 
