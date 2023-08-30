@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # required on mac: brew install gsed
 gsed -i "s/exports.quickSort = function/exports.quickSort = ()=>{};function nop/" node_modules/source-map-js/lib/quick-sort.js
 echo 'patch node_modules/source-map-js/lib/quick-sort.js'

@@ -5,6 +5,17 @@ export interface Env {
 	SCM_BUCKET: R2Bucket;
 }
 
+// TODO: notify change
+let _smc: SourceMapConsumer = null as any;
+async function loadSMC(bucket: R2Bucket) {
+	if (_smc) return _smc;
+	const mapFileBody = await bucket.get('worker.js.map');
+	const map = await mapFileBody?.json();
+	const consumer = new SourceMapConsumer(map as RawSourceMap);
+	_smc = consumer;
+	return consumer
+}
+
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		try {
@@ -17,21 +28,19 @@ export default {
 			return new Response('Hello World!');
 		} catch (err) {
 			if (err instanceof Error && err.message === 'manual-error') {
-				const mapFileBody = await env.SCM_BUCKET.get('worker.js.map');
-				const map = await mapFileBody?.json();
-				const consumer = new SourceMapConsumer(map as RawSourceMap);
+				const smc = await loadSMC(env.SCM_BUCKET);
 				const frames = ErrorStackParser.parse(err);
 				const originalFrames = frames.map(frame => {
-					return consumer.originalPositionFor({
+					return smc.originalPositionFor({
 						line: frame.lineNumber!,
 						column: frame.columnNumber!,
 					});
 				});
+				// build error format
 				let out = "Error: " + err.message + '\n';
 				for (const f of originalFrames) {
 					out += `  at ${f.source}:${f.line}:${f.column}\n`;
 				}
-
 				return new Response(out, { status: 500 });
 			}
 			throw err;

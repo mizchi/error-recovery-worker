@@ -3,16 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "",
     "deploy": "wrangler deploy",
     "start": "wrangler dev"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230419.0",
     "error-stack-parser": "^2.1.4",
-    "source-map": "^0.7.4",
     "source-map-js": "^1.0.2",
-    "typescript": "^5.0.4",
-    "wrangler": "^3.0.0"
+    "typescript": "^5.2.2",
+    "wrangler": "^3.6.0"
   },
   "dependencies": {
     "esbuild": "^0.19.2"
